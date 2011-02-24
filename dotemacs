@@ -71,6 +71,18 @@
                :type git
                :url "git://github.com/defunkt/textmate.el"
                :load "textmate.el")
+        (:name haml
+               :type git
+               :url "git://github.com/nex3/haml-mode.git"
+               :load "haml-mode.el")
+        (:name sass
+               :type git
+               :url "git://github.com/nex3/sass-mode.git"
+               :load "sass-mode.el")
+        (:name cucumber
+               :type git
+               :url "git://github.com/michaelklishin/cucumber.el"
+               :load "feature-mode.el")
         (:name rvm
                :type git
                :url "http://github.com/djwhitt/rvm.el.git"
@@ -90,14 +102,11 @@
 
 (el-get 'sync)
 
-
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
 (set-frame-parameter (selected-frame) 'alpha '(95 60))
 (add-to-list 'default-frame-alist '(alpha 95 60))
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-(setq-default indent-tabs-mode nil)
 
 (load "~/.emacs.d/pmade-colors")
 
@@ -106,8 +115,3 @@
 (require `speedbar)
 
 (ido-mode t)
-
-;; Cucumber
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/cucumber.el"))
-(require 'feature-mode)
-(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
