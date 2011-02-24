@@ -30,6 +30,22 @@
 
 (global-auto-revert-mode t)
 
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
+(setq inhibit-startup-message t)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(delete-selection-mode t)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(blink-cursor-mode t)
+(show-paren-mode t)
+(column-number-mode t)
+(set-fringe-style -1)
+(tooltip-mode -1)
 
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
 (set-frame-parameter (selected-frame) 'alpha '(95 60))
@@ -46,17 +62,6 @@
 (require `speedbar)
 
 (ido-mode t)
-
-(require 'pabbrev)
-(global-pabbrev-mode 1)
-
-;; Rails
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/rails-minor-mode"))
-(require 'rails)
-
-;; rhtml
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/rhtml-minor-mode"))
-(require 'rhtml-mode)
 
 ;; Cucumber
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/cucumber.el"))
