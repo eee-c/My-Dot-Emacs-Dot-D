@@ -1,0 +1,7 @@
+* My Emacs Configuration
+My .emacs file pulls everything in via (load "~/.emacs.d/dotemacs")
+
+* For Version 24
+** Using el-get / elpa to pull in external libraries
+** Modified version of pabbrev to work with 24
+** No longer using rails-minor-mode
