@@ -65,8 +65,6 @@
                :type elpa
                :load "ruby-mode.el"
                :after (lambda () (ruby-mode-hook)))
-        (:name inf-ruby  :type elpa)
-        (:name ruby-compilation :type elpa)
         (:name css-mode
                :type elpa
                :after (lambda () (css-mode-hook)))
@@ -121,7 +119,6 @@
 
 (require 'pabbrev)
 (global-pabbrev-mode t)
-
 
 (add-hook 'ruby-mode-hook
           (lambda ()
