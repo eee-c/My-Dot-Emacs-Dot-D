@@ -1,0 +1,6 @@
+* My Emacs Configuration
+My .emacs file pulls everything in via (load "~/.emacs.d/dotemacs")
+
+* For Version 23
+** Using cucumber, rails-minor-mode, rhtml-minor-mode in separate repos
+
