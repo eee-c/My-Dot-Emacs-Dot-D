@@ -26,7 +26,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-;; Boston, MA 02111-1307, USA. 
+;; Boston, MA 02111-1307, USA.
 
 ;;; Commentary:
 ;;
@@ -51,7 +51,7 @@
 ;; buffers.
 ;;
 ;; The current user interface looks like so...
-;; 
+;;
 ;; p[oint]
 ;; pr[ogn]
 ;; pre[-command-hook]
@@ -62,7 +62,7 @@
 ;; previously.  By hitting [tab] at any point the user can complete the
 ;; word.  The [tab] key is normally bound to `indent-line'.
 ;; `pabbrev-mode' preserves access to this command (or whatever else
-;; [tab] was bound to), if there is not current expansion. 
+;; [tab] was bound to), if there is not current expansion.
 ;;
 ;; Sometimes you do not want to select the most commonly occurring
 ;; word, but a less frequently occurring word.  You can access this
@@ -116,7 +116,7 @@
 ;;; Installation:
 ;;
 ;; To install this file place in your `load-path', and add
-;; 
+;;
 ;; (require 'pabbrev)
 ;;
 ;; to your .emacs
@@ -130,11 +130,11 @@
 ;; Emacs (21.1), where it seems to byte compile, and work. But it has not
 ;; been tried out extensively. It will NOT work on Emacs' older than
 ;; 21.
-;; 
+;;
 ;; This package now has an XEmacs maintainer (Martin Kuehl). He
 ;; appears to have isolated the last few problems with pabbrev on
 ;; XEmacs, and it is running stably there now. It has been tested on
-;; XEmacs 21.4, running on Debian and Ubuntu Linux. 
+;; XEmacs 21.4, running on Debian and Ubuntu Linux.
 
 ;;; Bugs;
 ;;
@@ -143,12 +143,12 @@
 ;; offering expansions in the buffer. It looks something like this....
 ;; pabbrev[-mode][v][ev][rev][brev][bbrev][abbrev] which is amusing
 ;; the first time, but more or less totally useless.
-;; 
+;;
 ;; Thanks to the efforts of Martin Kuehl, I think we have tracked the
 ;; cause of the problem now (the old version depended on
 ;; pre-command-hook and post-command-hook being called
 ;; consecutively. But sometimes they get called twice). Please let us
-;; know if you see this problem. 
+;; know if you see this problem.
 
 ;;; Limitations:
 ;;
@@ -174,7 +174,7 @@
 ;; sort during the scavenge), any cons cells with less than one
 ;; usage. I'm not sure this is a problem though. The number of words
 ;; in the dictionaries only increases slowly, then don't seem to grow
-;; that quickly, and they don't take up that much memory. 
+;; that quickly, and they don't take up that much memory.
 
 
 ;;; Bug Reporting
@@ -192,7 +192,7 @@
 ;; like this...
 ;; "the" -> ("the" . 5)
 ;; "there" -> ("there" . 3)
-;; 
+;;
 ;; I call this the usage hash, as it stores the total number of times
 ;; each word has been seen.
 ;;
@@ -248,7 +248,7 @@
 
 (eval-and-compile
   (if (featurep 'xemacs)
-      (progn 
+      (progn
         (require 'overlay)
         (unless (fboundp 'line-beginning-position)
           (defalias 'line-beginning-position 'point-at-bol))
@@ -282,7 +282,7 @@
    "*Will not activate function `global-pabbrev-mode' if buffers are over this size (in bytes) (when non-nil)."
    :type 'integer
    :group 'pabbrev)
- 
+
 (defcustom pabbrev-marker-distance-before-scavenge 2000
   "Minimal distance moved before we wish to scavenge."
   :type 'integer
@@ -342,9 +342,9 @@ this at a later date."
   "If non NIL, signal an error when in a read only buffer.
 
 `pabbrev-mode' works by alterating the local buffer, so it's pointless
-within a read only buffer. So, normally, it signals an error when an 
+within a read only buffer. So, normally, it signals an error when an
 attempt is made to use it in this way. But this is a pain if you toggle
-buffers read only a lot. Set this to NIL, and pabbrev-mode will disable 
+buffers read only a lot. Set this to NIL, and pabbrev-mode will disable
 it's functionality in read only buffers silently."
   :type 'boolean
   :group 'pabbrev)
@@ -359,7 +359,7 @@ normal way is to offer the expansion which occurs most frequently in
 the words which pabbrev has scavenged (in any buffer in the same
 mode). The other method is to take the minimal occuring substring
 present in any potential expansion; this is a lot more like standard
-completion seen on a command line. 
+completion seen on a command line.
 
 I'm not telling you which version, I prefer."
   :type 'boolean
@@ -386,7 +386,7 @@ I'm not telling you which version, I prefer."
       (t (:bold t :underline t)))
     "Face for displaying suggestions."
     :group 'pabbrev))
-  
+
 (if pabbrev-xemacs-p
     (defface pabbrev-suggestions-label-face
       nil "Font lock mode face used to highlight suggestions"
@@ -470,7 +470,7 @@ This is a function internal to the data structures.  The
     (puthash word value (pabbrev-get-usage-hash))
     value))
 
-  
+
 (defun pabbrev-add-word-cons-with-prefix (prefix conscell)
   "Add a word usage, and a PREFIX.
 This function is internal to the data structures, and should normally
@@ -513,19 +513,19 @@ prefix of the from the cons cell."
   ;; hash, which would reduce the amount of sorting that needs to be
   ;; done. But it would then be in the command cycle rather than the
   ;; idle loop, which seems like a really bad idea to me.
-  ;; 
+  ;;
   ;; When I wrote the data structures this was a bit of a worry as
   ;; emacs spent most of its time in this loop, but now I've bolted
   ;; on a user interface, its not so much of a problem, as plenty of
-  ;; time is spent in placing on the "been here" overlays....  
+  ;; time is spent in placing on the "been here" overlays....
   (sort alist
 	;;'pabbrev-comparitor-function))
 	(lambda(a b)
 	  (> (cdr a) (cdr b)))))
-  
+
 (defun pabbrev-comparitor-function(a b)
   (> (cdr a) (cdr b)))
-  
+
 
 (defun pabbrev-add-word (word)
   "Add the usage of a WORD to the current dictionary."
@@ -554,7 +554,7 @@ it's ordering is part of the core data structures"
 ;; I don't understand this. I thought that this were equivalent. But
 ;; modes which define [tab] get used in preference to \t. So I define
 ;; both. Don't change these without also changing the definition of
-;; pabbrev-expand-maybe. 
+;; pabbrev-expand-maybe.
 (define-key pabbrev-mode-map "\t" 'pabbrev-expand-maybe)
 (define-key pabbrev-mode-map [tab] 'pabbrev-expand-maybe)
 
@@ -579,7 +579,7 @@ on in all buffers.
 				  nil
 				  " Pabbrev"
 				  pabbrev-mode-map
-				  (when (and pabbrev-mode-map 
+				  (when (and pabbrev-mode-map
 					     buffer-read-only)
 				    (if pabbrev-read-only-error
                                         (error "Can not use pabbrev-mode in read only buffer"))))
@@ -644,9 +644,9 @@ start and end positions")
 
 (defun pabbrev-mode-on()
   "Turn `pabbrev-mode' on."
-  (make-local-hook 'pre-command-hook)
+;;  (make-local-hook 'pre-command-hook)
   (add-hook 'pre-command-hook 'pabbrev-pre-command-hook nil t)
-  (make-local-hook 'post-command-hook)
+;;  (make-local-hook 'post-command-hook)
   (add-hook 'post-command-hook 'pabbrev-post-command-hook nil t))
 
 (defun pabbrev-mode-off()
@@ -663,10 +663,10 @@ start and end positions")
 
 ;;(defun test()
 ;;   (interactive)
-;;   (pabbrev-insert-suggestion 
+;;   (pabbrev-insert-suggestion
 ;;    (pabbrev-thing-at-point)
 ;;    (cdr (pabbrev-bounds-of-thing-at-point))
-;;    (pabbrev-fetch-all-suggestions-for-prefix 
+;;    (pabbrev-fetch-all-suggestions-for-prefix
 ;;     (pabbrev-thing-at-point))))
 
 
@@ -676,13 +676,13 @@ This function is normally run off the `post-command-hook'."
   (condition-case err
       ;; pabbrev will not switch on in a read only buffer. But the
       ;; buffer may have become read only between the time that it was
-      ;; switched on, and now. So we need to check this anyway. 
+      ;; switched on, and now. So we need to check this anyway.
       (unless (or buffer-read-only
                   ;; This seems to be an issue in xemacs, so check for
-                  ;; this as well. 
+                  ;; this as well.
                   (window-minibuffer-p (selected-window)))
         (save-excursion
-          ;; ensure that any suggestion is deleted. 
+          ;; ensure that any suggestion is deleted.
           (when pabbrev-marker
             (pabbrev-delete-last-suggestion))
           (let ((word (pabbrev-thing-at-point))
@@ -710,7 +710,7 @@ This function is normally run off the `post-command-hook'."
    ;; I don't think we need to check for buffer-read-only
    ;; here, because pabbrev-marker will always be nil in a
    ;; read only buffer. I could be wrong about this of
-   ;; course. 
+   ;; course.
    (pabbrev-delete-overlay)
    (delete-region (car pabbrev-marker) (cdr pabbrev-marker))
    (setq pabbrev-marker nil)))
@@ -753,7 +753,7 @@ anything. Toggling it off, and then on again will usually restore functionality.
       (backtrace)))
   (select-window (get-buffer-window "*pabbrev-fail*"))
   (error "Error in pabbrev-mode"))
-		
+
 (defun pabbrev-marker-last-expansion()
   "Fetch marker for last offered expansion."
   (unless
@@ -854,9 +854,9 @@ If there is no expansion the command returned by
 	    (funcall prev-binding))))))
 
 
-(defun pabbrev-show-previous-binding () 
+(defun pabbrev-show-previous-binding ()
   (interactive)
-  (message "Previous binding is: %s" 
+  (message "Previous binding is: %s"
            (pabbrev-get-previous-binding)))
 
 (defun pabbrev-get-previous-binding ()
@@ -865,14 +865,14 @@ The command `pabbrev-show-previous-binding' prints this out."
   (let ((pabbrev-mode nil))
     ;; This is the original and satisfying solution
     ;;(key-binding (char-to-string last-command-event)))))
-    
+
     ;; This is the new and unsatisfying one. The
     ;; keybindings are hard coded here, because I defined
     ;; [tab] and \t earlier. Both are tab, but the former
-    ;; gets used in preference to the later. 
+    ;; gets used in preference to the later.
     (or (key-binding [tab])
         (key-binding "\t"))))
-             
+
 ;;           ;; I think that I have this worked out now.
 ;;           (if (eq prev-binding 'pabbrev-expand-maybe)
 ;;               (message "pabbrev known bug! Avoiding recursive tab")
@@ -1078,7 +1078,7 @@ self inserting commands."
   (pabbrev-suggestions-insert
    pabbrev-expand-previous-word))
 
-(defun pabbrev-suggestions-minimum() 
+(defun pabbrev-suggestions-minimum()
   "Select the maximally occuring substring."
   (interactive)
   (pabbrev-suggestions-insert
@@ -1098,7 +1098,7 @@ self inserting commands."
     (pabbrev-suggestions-delete-window)
     (if point
 	(goto-char point))))
-  
+
 (defun pabbrev-suggestions-select(&optional index)
   "Select one of the numbered suggestions."
   (interactive)
@@ -1182,21 +1182,21 @@ self inserting commands."
   (interactive)
   (narrow-to-region (region-beginning) (region-end))
   (pabbrev-scavenge-buffer))
-      
+
 (defun pabbrev-scavenge-buffer()
   (interactive)
   (let ((current-line)
         (total-line (count-lines (point-min) (point-max))))
     (save-excursion
       (goto-char (point-min))
-      
+
       (working-status-forms "pabbrev scavenging buffer" "done"
         (while (pabbrev-forward-thing)
           (setq current-line (count-lines (point-min) (point)))
           (working-status (/ (* 100 current-line) total-line))
           ;;(message "pabbrev scavenging (buffer %s words %s line %s done %s %%)..."
            ;;        (current-buffer)
-            ;;       (pabbrev-get-usage-dictionary-size) 
+            ;;       (pabbrev-get-usage-dictionary-size)
              ;;      current-line
               ;;     (/ (* 100 current-line) total-line))
         ;;(message "pabbrev scavenging buffer...On line %s"
@@ -1204,7 +1204,7 @@ self inserting commands."
           (pabbrev-mark-add-word
            (pabbrev-bounds-of-thing-at-point)))
         (working-status t))
-      
+
       (pabbrev-debug-message "Dictionary size %s total usage %s"
                              (pabbrev-get-usage-dictionary-size))
       (message "pabbrev scavenging buffer...done."))))
@@ -1231,7 +1231,7 @@ NUMBER is how many words we should try to scavenge"
 ;; dictionary.
 (add-hook 'pabbrev-mode-on-hook
 	  'pabbrev-scavenge-some)
- 
+
 (defvar pabbrev-long-idle-timer nil
   "Timer which adds whole buffer.
 There are two idle timers which run for function `pabbrev-mode'.  This
@@ -1270,9 +1270,9 @@ See `pabbrev-long-idle-timer'.")
 
 (defun pabbrev-short-idle-timer(&optional buffer)
   "Add a few words to the dictionary."
-  (save-excursion 
+  (save-excursion
     (set-buffer (or buffer (current-buffer)))
-    ;; remember which buffer we have just looked at. 
+    ;; remember which buffer we have just looked at.
     (setq pabbrev-timer-buffer (current-buffer))
     (if (and pabbrev-mode (not pabbrev-disable-timers))
         (progn
@@ -1294,7 +1294,7 @@ See `pabbrev-long-idle-timer'.")
 
 ;; for some reason that I do not understand yet, this sometimes
 ;; appears to work in the wrong buffer. I really have not got any idea
-;; why this is the case. 
+;; why this is the case.
 (defun pabbrev-idle-timer-function-0()
   "Add all words to the buffer.
 `pabbrev-scavenge-buffer' does this more efficiently interactively.
@@ -1540,7 +1540,7 @@ to the dictionary."
 	 hash))))
 
 ;; Working.el hack. Use working.el if it's around, or don't if it's
-;; not. 
+;; not.
 (eval-and-compile
   (condition-case nil
       (require 'working)
@@ -1551,7 +1551,7 @@ to the dictionary."
          (list 'let (list (list 'msg message) (list 'dstr donestr)
                           '(ref1 0))
                (cons 'progn forms)))
-       
+
        (defun working-status (&optional percent &rest args)
          "Called within the macro `working-status-forms', show the status."
          (message "%s%s" (apply 'format msg args)
@@ -1560,13 +1560,13 @@ to the dictionary."
                             (or percent
                                 (floor (* 100.0 (/ (float (point))
                                                    (point-max)))))))))
-       
+
        (defun working-dynamic-status (&optional number &rest args)
          "Called within the macro `working-status-forms', show the status."
          (message "%s%s" (apply 'format msg args)
                   (format "... %c" (aref [ ?- ?/ ?| ?\\ ] (% ref1 4))))
          (setq ref1 (1+ ref1)))
-       
+
        (put 'working-status-forms 'lisp-indent-function 2)))))
 
 (provide 'pabbrev)
