@@ -118,3 +118,6 @@
 (require `speedbar)
 
 (ido-mode t)
+
+(require 'pabbrev)
+(global-pabbrev-mode t)
