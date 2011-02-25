@@ -121,3 +121,10 @@
 
 (require 'pabbrev)
 (global-pabbrev-mode t)
+
+
+(add-hook 'ruby-mode-hook
+          (lambda ()
+            (require 'ruby-electric)
+              (ruby-electric-mode)))
+
