@@ -5,6 +5,7 @@
 (global-set-key [end] 'end-of-line)
 (global-set-key [delete] 'delete-char)
 
+(global-unset-key [f1])
 (global-set-key [f5] 'replace-string)
 (global-set-key [f6] 'goto-line)
 (global-set-key [f7] 'match-paren)
