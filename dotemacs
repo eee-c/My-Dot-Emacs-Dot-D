@@ -18,6 +18,9 @@
 
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+(global-unset-key "\C-x m")
+(global-set-key "\C-xm" 'execute-extended-command)
+
 
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
@@ -60,6 +63,11 @@
 
 
 ;; Mode hooks
+(add-to-list 'hs-special-modes-alist
+	     '(ruby-mode
+	       "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
+	       (lambda (arg) (ruby-end-of-block)) nil))
+
 (defun ruby-mode-hook ()
   (autoload 'ruby-mode "ruby-mode" nil t)
   (add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
@@ -92,6 +100,9 @@
                               (setq css-indent-level 2)
                               (setq css-indent-offset 2))))
 
+(defun markdown-mode-hook ()
+  (autoload 'markdown-mode "markdown-mode" nil t)
+  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
 
 ;; el-get
 
@@ -110,6 +121,20 @@
         (:name css-mode
                :type elpa
                :after (lambda () (css-mode-hook)))
+        (:name doc-mode)
+        (:name asciidoc
+               :type elpa
+               :after (lambda ()
+                        (autoload 'doc-mode "doc-mode" nil t)
+                        (add-to-list 'auto-mode-alist '("\\.asciidoc$" . doc-mode))
+                        (add-to-list 'auto-mode-alist '("\\.adoc$" . doc-mode))
+                        (add-to-list 'auto-mode-alist '("\\.asc$" . doc-mode))
+                        (add-hook 'doc-mode-hook '(lambda ()
+                                                    (turn-on-auto-fill)
+                                                    (require 'asciidoc)))))
+        (:name markdown-mode
+               :type elpa
+               :after (lambda () (markdown-mode-hook)))
         (:name textmate
                :type git
                :url "git://github.com/defunkt/textmate.el"
@@ -161,3 +186,26 @@
 
 (require 'pabbrev)
 (global-pabbrev-mode t)
+
+(require 'dart-mode)
+(add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
+
+;; Ugh. No erlang-mode in elpa?
+;; (setq load-path (cons (concat "/usr/share/"
+;; 		(symbol-name debian-emacs-flavor)
+;; 		"/site-lisp/erlang") load-path))
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/erlang")
+(setq erlang-root-dir "/usr/lib/erlang")
+(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+(require 'erlang-start)
+
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+)
+(global-set-key "\C-c\C-d" 'duplicate-line)
