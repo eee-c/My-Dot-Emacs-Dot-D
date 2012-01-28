@@ -1,5 +1,8 @@
 ;; This is loaded from the real .emacs file
 
+(global-set-key " " 'set-mark-command)
+(global-set-key "´" 'end-of-line)
+
 (global-set-key "\M-f" 'auto-fill-mode)
 (global-set-key [home] 'beginning-of-line)
 (global-set-key [end] 'end-of-line)
@@ -194,10 +197,10 @@
 ;; (setq load-path (cons (concat "/usr/share/"
 ;; 		(symbol-name debian-emacs-flavor)
 ;; 		"/site-lisp/erlang") load-path))
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/erlang")
-(setq erlang-root-dir "/usr/lib/erlang")
-(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
-(require 'erlang-start)
+;;(add-to-list 'load-path "/usr/share/emacs/site-lisp/erlang")
+;;(setq erlang-root-dir "/usr/lib/erlang")
+;;(setq exec-path (cons "/usr/lib/erlang/bin" exec-path))
+;;(require 'erlang-start)
 
 (defun duplicate-line()
   (interactive)
