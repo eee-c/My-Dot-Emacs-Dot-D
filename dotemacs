@@ -24,7 +24,6 @@
 (global-unset-key "\C-x m")
 (global-set-key "\C-xm" 'execute-extended-command)
 
-
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key "\C-c\C-k" 'kill-region)
@@ -55,6 +54,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (delete-selection-mode t)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (blink-cursor-mode t)
@@ -137,6 +137,7 @@
                                                     (require 'asciidoc)))))
         (:name markdown-mode
                :type elpa
+               :load "markdown-mode.el"
                :after (lambda () (markdown-mode-hook)))
         (:name textmate
                :type git
