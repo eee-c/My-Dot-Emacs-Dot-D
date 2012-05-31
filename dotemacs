@@ -63,7 +63,8 @@
 (set-fringe-style -1)
 (tooltip-mode -1)
 
-
+(add-to-list 'default-frame-alist '(height . 45))
+(add-to-list 'default-frame-alist '(width . 164))
 
 ;; Mode hooks
 (add-to-list 'hs-special-modes-alist
@@ -143,6 +144,10 @@
                :type git
                :url "git://github.com/defunkt/textmate.el"
                :load "textmate.el")
+        (:name yasnippet
+               :type git
+               :url "https://github.com/capitaomorte/yasnippet.git"
+               :load "yasnippet.el")
         (:name haml
                :type git
                :url "git://github.com/nex3/haml-mode.git"
@@ -191,6 +196,8 @@
 (require 'pabbrev)
 (global-pabbrev-mode t)
 
+(yas/global-mode 1)
+
 (require 'dart-mode)
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 
@@ -213,3 +220,44 @@
   (yank)
 )
 (global-set-key "\C-c\C-d" 'duplicate-line)
+
+;; my macros
+(fset 'wrap-p
+   [?  ?  ?< ?p ?> ?\C-e ?< ?/ ?p ?> down down ?\C-a])
+(global-set-key "\M-p" 'wrap-p)
+
+(fset 'temporary-link
+   [?\C-s ?< ?< ?\C-m backspace backspace ?\[ ?\[ ?\C-s ?\] ?\] ?\C-? ?\C-? ?> ?> ?\C-m backspace backspace ?\] ?\]])
+
+(fset 'mark-section
+   [?\C-x ?\C-m ?r ?e ?g tab backspace backspace backspace ?s ?e tab ?a ?r tab ?r tab backspace return ?\C-k tab ?f ?o ?r tab ?- ?r tab return ?^ ?= ?= ?= ?  return backspace backspace backspace backspace ?  ?  ?< ?/ ?s ?e ?c ?t ?1 ?> return ?  ?  ?< ?s ?e ?c ?t ?1 ?> return ?  ?  ?  ?  ?< ?t ?i ?t ?l ?e ?> ?\C-e ?< ?/ ?t ?i ?t ?l ?e ?>])
+(global-set-key "\M-s" 'mark-section)
+
+(fset 'start-sect2
+   [?\C-x ?\C-m ?s ?e ?r ?f backspace backspace ?e backspace ?a ?r tab ?f ?o ?r tab ?- ?r ?e tab return ?^ ?= ?= ?= ?= ?  return backspace backspace backspace backspace backspace backspace ?  ?  ?< ?s ?e ?c ?t ?2 ?> return ?  ?  ?  ?  ?< ?t ?i ?t ?l ?e ?> ?\C-e ?< ?/ ?t ?i ?t ?l ?e ?>])
+(global-set-key "\M-2" 'start-sect2)
+
+(fset 'replace-code-inline
+   [?\C-s ?s ?o ?u ?r ?c ?e ?, ?\C-m ?\C-w backspace ?  ?  ?< ?c ?o ?d ?e ?  ?l ?a ?n ?g ?u ?a ?g ?e ?= ?\" ?\C-e backspace ?\" ?> down ?\C-a ?\C-k ?\C-k ?\C-s ?- ?- ?- ?- ?\C-m ?\C-a ?\C-k ?  ?  ?< ?/ ?c ?o ?d ?e ?>])
+(global-set-key "\C-ci" 'replace-code-inline)
+
+(fset 'replace-code-linked
+   [?\C-s ?: ?: ?i ?n ?c ?l ?u ?d ?e ?s ?\C-m right ?\C-  up up ?\C-a ?\C-x ?\C-k ?  ?  ?  ?  ?< ?c ?o ?d ?e ?  ?f ?i ?l ?e ?= ?\" ?c ?o ?d ?e ?/ ?\C-e backspace backspace ?\" ?  ?/ ?> down backspace backspace backspace backspace backspace])
+(global-set-key "\C-cl" 'replace-code-linked)
+
+
+(fset 'convert-small-admonition
+   [?  ?  ?< ?s ?i ?d ?e ?b ?a ?r ?> ?T ?i ?t backspace backspace backspace ?< ?t ?i ?t ?l ?e ?> ?\M-c ?< ?/ ?t ?i ?t ?l ?e ?> ?\C-d ?\C-d ?\C-d return ?\M-p ?\M-p up ?< ?/ ?s ?i tab return])
+(global-set-key "\C-ca" 'convert-small-admonition)
+
+(fset 'inline-code
+   [?\C-s ?` ?\C-m backspace ?< ?i ?c ?> ?\C-s ?` ?\C-m backspace ?< ?/ ?i ?c ?>])
+(global-set-key "\M-q" 'inline-code)
+
+
+
+
+
+
+;; (Global</titleset-key (kbd "\M-p") 'wrap-p)
+;; (global-set-key "\M-f" 'auto-fill-mode)
