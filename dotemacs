@@ -80,12 +80,17 @@
   (add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rb\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.ru\\'" . ruby-mode))
-  (add-hook 'ruby-mode-hook '(lambda ()
-                               (setq ruby-deep-arglist t)
-                               (setq ruby-deep-indent-paren nil)
-                               (setq c-tab-always-indent nil)
-                               (require 'ruby-electric)
-                               (ruby-electric-mode))))
+
+  ;; Ruby electric mode is non-worky with latest emacs snapshot (24.1.50.1)
+  (Electric-pair-mode t)
+  (Electric-indent-mode t)
+  (Electric-layout-mode t))
+  ;; (add-hook 'ruby-mode-hook '(lambda ()
+  ;;                              (setq ruby-deep-arglist t)
+  ;;                              (setq ruby-deep-indent-paren nil)
+  ;;                              (setq c-tab-always-indent nil)
+  ;;                              (require 'ruby-electric)
+  ;;                              (ruby-electric-mode))))
 
 (defun rhtml-mode-hook ()
   (autoload 'rhtml-mode "rhtml-mode" nil t)
@@ -144,10 +149,10 @@
                :type git
                :url "git://github.com/defunkt/textmate.el"
                :load "textmate.el")
-        (:name yasnippet
-               :type git
-               :url "https://github.com/capitaomorte/yasnippet.git"
-               :load "yasnippet.el")
+;;        (:name yasnippet
+;;               :type git
+;;               :url "https://github.com/capitaomorte/yasnippet.git"
+;;               :load "yasnippet.el")
         (:name haml
                :type git
                :url "git://github.com/nex3/haml-mode.git"
@@ -196,7 +201,7 @@
 (require 'pabbrev)
 (global-pabbrev-mode t)
 
-(yas/global-mode 1)
+;;(yas/global-mode 1)
 
 (require 'dart-mode)
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
