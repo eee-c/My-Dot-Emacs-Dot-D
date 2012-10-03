@@ -139,7 +139,8 @@
                         (add-to-list 'auto-mode-alist '("\\.adoc$" . doc-mode))
                         (add-to-list 'auto-mode-alist '("\\.asc$" . doc-mode))
                         (add-hook 'doc-mode-hook '(lambda ()
-                                                    (turn-on-auto-fill)
+                                                    (turn-off-auto-fill)
+                                                    (turn-on-visual-line-mode)
                                                     (require 'asciidoc)))))
         (:name markdown-mode
                :type elpa
