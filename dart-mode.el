@@ -2,7 +2,7 @@
 
 ;; Author: Nathan Weizenbaum
 ;; URL: http://code.google.com/p/dart-mode
-;; Version: 0.7
+;; Version: 0.9
 ;; Keywords: language
 
 ;; Copyright (C) 2011 Google Inc.
@@ -36,6 +36,8 @@
 ;; * Untyped parameters aren't fontified correctly.
 ;; * Quotes immediately after string interpolation are marked as unclosed.
 ;; * Sexp movement doesn't properly ignore quotes in interpolation.
+;; * Methods using "=>" can cause indentation woes.
+;; * C and C++ modes seem to be hosed.
 
 ;;; Code:
 
@@ -207,7 +209,8 @@
                         (statement-block-intro . dart-block-offset)
                         (block-close . dart-block-offset)
                         (dart-brace-list-cont-nonempty .
-                         dart-brace-list-cont-nonempty-offset))))
+                         dart-brace-list-cont-nonempty-offset)
+                        (case-label . +))))
   "The default Dart styles.")
 
 (c-add-style "dart" dart-c-style)
@@ -368,6 +371,16 @@ SYNTAX-GUESS is the output of `c-guess-basic-syntax'."
                 (c-end-of-current-token base))
         (setq base (point)))))))
 
+(defadvice c-parse-state (around dart-c-parse-state activate)
+  (if (not (c-major-mode-is 'dart-mode)) (ad-do-it)
+    ;; c-parse-state is a wrapper around c-parse-state-1 that does some tricks
+    ;; to ensure that dangling brackets in preprocessor commands don't screw up
+    ;; parse information for the real world. In Dart, all "preprocessor"
+    ;; directives have matched braces, so we don't need to worry about that. The
+    ;; wrapper was also screwing up indentation in weird ways, so we just ignore
+    ;; it.
+    (setq ad-return-value (c-parse-state-1))))
+
 
 ;;; Additional fontification support
 
@@ -441,6 +454,59 @@ Each list item should be a regexp matching a single identifier.")
 (unless dart-mode-syntax-table
   (setq dart-mode-syntax-table
         (funcall (c-lang-const c-make-mode-syntax-table dart))))
+
+
+;;; Flymake Support
+
+(defun flymake-dart-init ()
+  "Return the dart_analyzer command to invoke for flymake."
+  (let* ((temp-file  (flymake-init-create-temp-buffer-copy
+                      'flymake-create-temp-inplace))
+	 (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name)))
+         ;; Work around Dart issue 7497
+         (work-dir (expand-file-name
+                    "flymake-dart-work"
+                    (flymake-get-temp-dir))))
+    (list "dart_analyzer" (list "--error_format" "machine" local-file
+                                "--work" work-dir))))
+
+(defun flymake-dart-cleanup ()
+  "Clean up after running the Dart analyzer."
+  (flymake-simple-cleanup)
+  (let ((dir-name (expand-file-name
+                   "flymake-dart-work"
+                   (flymake-get-temp-dir))))
+    (condition-case nil
+        (delete-dir dir-name t)
+      (error
+       (flymake-log 1 "Failed to delete dir %s, error ignored" dir-name)))))
+
+(eval-after-load 'flymake
+  '(progn
+     (when (boundp 'flymake-warn-line-regexp)
+       (add-hook 'dart-mode-hook
+                 (lambda ()
+                   (setq (make-variable-buffer-local 'flymake-warn-line-regexp)
+                         "^WARNING|"))))
+
+     (defadvice flymake-post-syntax-check (before flymake-post-syntax-check-dart activate)
+       "Sets the exit code of the dart_analyzer process to 0.
+
+dart_analyzer can report errors for files other than the current
+file. flymake dies horribly if the process emits a non-zero exit
+code without any warnings for the current file. These two
+properties interact poorly."
+       (when (eq major-mode 'dart-mode)
+         (ad-set-arg 0 0)))
+
+     (push '("\\.dart\\'" flymake-dart-init flymake-dart-cleanup)
+           flymake-allowed-file-name-masks)
+     ;; Accept negative numbers to work around Dart issue 7495
+     (push '("^[^|]+|[^|]+|[^|]+|file:\\([^|]+\\)|\\([0-9]+\\)|\\([0-9]+\\)|[0-9]+|\\(.*\\)$"
+             1 2 3 4)
+           flymake-err-line-patterns)))
 
 
 ;;; Initialization

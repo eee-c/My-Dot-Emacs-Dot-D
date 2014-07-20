@@ -1,5 +1,8 @@
 ;; This is loaded from the real .emacs file
 
+;; Pub serve
+(setq create-lockfiles nil)
+
 (global-set-key " " 'set-mark-command)
 (global-set-key "´" 'end-of-line)
 
@@ -29,6 +32,11 @@
 (global-set-key "\C-c\C-k" 'kill-region)
 
 (global-set-key [?\C-x?\C-\;] 'comment-or-uncomment-region)
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
 ;; I want Ctrl-y to paste most recent x-selection. These batshit crazy
 ;; settings are apparently the way to do this in latest builds of
@@ -66,6 +74,8 @@
 (add-to-list 'default-frame-alist '(height . 45))
 (add-to-list 'default-frame-alist '(width . 164))
 
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
 ;; Mode hooks
 (add-to-list 'hs-special-modes-alist
 	     '(ruby-mode
@@ -82,9 +92,11 @@
   (add-to-list 'auto-mode-alist '("\\.ru\\'" . ruby-mode))
 
   ;; Ruby electric mode is non-worky with latest emacs snapshot (24.1.50.1)
+
   (Electric-pair-mode t)
   (Electric-indent-mode t)
   (Electric-layout-mode t))
+
   ;; (add-hook 'ruby-mode-hook '(lambda ()
   ;;                              (setq ruby-deep-arglist t)
   ;;                              (setq ruby-deep-indent-paren nil)
@@ -116,7 +128,9 @@
 ;; el-get
 
 (require 'package)
-(setq package-archives (cons '("tromey" . "http://tromey.com/elpa/") package-archives))
+;; (setq package-archives (cons '("tromey" . "http://tromey.com/elpa/") package-archives))
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
@@ -145,7 +159,10 @@
         (:name markdown-mode
                :type elpa
                :load "markdown-mode.el"
-               :after (lambda () (markdown-mode-hook)))
+               :after (lambda ()
+                        (add-hook 'markdown-mode-hook '(lambda ()
+                                                         (turn-on-visual-line-mode)
+                                                         ))))
         (:name textmate
                :type git
                :url "git://github.com/defunkt/textmate.el"
@@ -181,7 +198,10 @@
                :type git
                :url "http://github.com/yoshiki/yaml-mode.git"
                :features yaml-mode
-               :after (lambda () (yaml-mode-hook)))))
+               :after (lambda () (yaml-mode-hook)))
+        (:name multiple-cursors
+               :type elpa
+               :load "multiple-cursors.el")))
 
 (el-get 'sync)
 
