@@ -71,10 +71,10 @@
 (set-fringe-style -1)
 (tooltip-mode -1)
 
-(add-to-list 'default-frame-alist '(height . 45))
-(add-to-list 'default-frame-alist '(width . 164))
+(add-to-list 'default-frame-alist '(height . 24))
+(add-to-list 'default-frame-alist '(width . 90))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
 ;; Mode hooks
 (add-to-list 'hs-special-modes-alist
@@ -105,10 +105,11 @@
   ;;                              (ruby-electric-mode))))
 
 (defun rhtml-mode-hook ()
-  (autoload 'rhtml-mode "rhtml-mode" nil t)
-  (add-to-list 'auto-mode-alist '("\\.rhtml\\'" . rhtml-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . rhtml-mode))
-  (add-to-list 'auto-mode-alist '("\\.rjs\\'" . rhtml-mode)))
+  ;; (autoload 'rhtml-mode "rhtml-mode" nil t)
+  ;; (add-to-list 'auto-mode-alist '("\\.rhtml\\'" . rhtml-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.erb\\'" . rhtml-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.rjs\\'" . rhtml-mode))
+)
 
 (defun yaml-mode-hook ()
   (autoload 'yaml-mode "yaml-mode" nil t)
@@ -128,10 +129,42 @@
 ;; el-get
 
 (require 'package)
-;; (setq package-archives (cons '("tromey" . "http://tromey.com/elpa/") package-archives))
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.rhtml?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.rjs?\\'" . web-mode))
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight t)
+
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+
+  (set-face-attribute 'web-mode-html-tag-face nil
+                      :foreground "#E8BF6A")
+  (set-face-attribute 'web-mode-html-attr-name-face nil
+                      :foreground "#E8BF6A")
+  ;; (set-face-attribute 'web-mode-html-attr-value-face nil
+  ;;                     :foreground "#E8BF6A"
+  ;;                     :weight 'bold)
+  (set-face-attribute 'web-mode-current-element-highlight-face nil
+                      :background "#4e4c46"
+                      :foreground "#dcdcdc")
+  (set-face-attribute 'web-mode-symbol-face nil
+                      :foreground "#cccaee")
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (require 'el-get)
