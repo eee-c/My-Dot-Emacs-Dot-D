@@ -3,13 +3,14 @@
 ;; Pub serve
 (setq create-lockfiles nil)
 
-(global-set-key " " 'set-mark-command)
+;;(global-set-key " " 'set-mark-command)
+;;(global-set-key "C-SPC" 'set-mark-command)
 (global-set-key "´" 'end-of-line)
 
 (global-set-key "\M-f" 'auto-fill-mode)
-(global-set-key [home] 'beginning-of-line)
-(global-set-key [end] 'end-of-line)
-(global-set-key [delete] 'delete-char)
+;;(global-set-key [home] 'beginning-of-line)
+;;(global-set-key [end] 'end-of-line)
+;;(global-set-key [delete] 'delete-char)
 
 (global-unset-key [f1])
 (global-set-key [f5] 'replace-string)
@@ -24,7 +25,7 @@
 
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
-(global-unset-key "\C-x m")
+(global-unset-key "\C-xm")
 (global-set-key "\C-xm" 'execute-extended-command)
 
 (global-set-key "\C-w" 'backward-kill-word)
@@ -74,7 +75,42 @@
 (add-to-list 'default-frame-alist '(height . 24))
 (add-to-list 'default-frame-alist '(width . 90))
 
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
+(set-frame-parameter (selected-frame) 'alpha '(95 60))
+(add-to-list 'default-frame-alist '(alpha 95 60))
+
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+;; Packages (missing asciidoc, cucumber)
+(setq package-list
+      '(js2-mode             ; Improved JavaScript editing mode
+        haml-mode
+        magit                ; control Git from Emacs
+        markdown-mode        ; Emacs Major mode for Markdown-formatted files
+        material-theme       ; A Theme based on Google Material Design
+        multiple-cursors     ; Multiple cursors for Emacs
+        sass-mode
+        rhtml-mode
+        rvm
+        yaml-mode
+        ))
+
+(require 'package)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(package-initialize)
+
+; fetch the list of packages available
+(unless package-archive-contents
+  (package-refresh-contents))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 
 ;; Mode hooks
 (add-to-list 'hs-special-modes-alist
@@ -126,15 +162,6 @@
   (autoload 'markdown-mode "markdown-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
 
-;; el-get
-
-(require 'package)
-(add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; (add-to-list 'package-archives
-;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(package-initialize)
-
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -163,86 +190,22 @@
                       :foreground "#dcdcdc")
   (set-face-attribute 'web-mode-symbol-face nil
                       :foreground "#cccaee")
+
+  (setq web-mode-extra-snippets
+      '((nil . (("polymer" . "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <title></title>\n\n    <!-- 1. Load the polymer platform. -->\n    <script\n       src=\"bower_components/webcomponentsjs/webcomponents.js\"></script>\n    <!-- 2. Load component(s) -->\n    <link rel=\"import\" href=\"elements/|\">\n  </head>\n  <body>\n    <div class=\"container\">\n      <h1></h1>\n    </div>\n  </body>\n</html>")))
+        ))
 )
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(require 'el-get)
-
-(setq el-get-sources
-      '((:name ruby-mode
-               :type elpa
-               :load "ruby-mode.el"
-               :after (lambda () (ruby-mode-hook)))
-        (:name css-mode
-               :type elpa
-               :after (lambda () (css-mode-hook)))
-        (:name doc-mode)
-        (:name asciidoc
-               :type elpa
-               :after (lambda ()
-                        (autoload 'doc-mode "doc-mode" nil t)
-                        (add-to-list 'auto-mode-alist '("\\.asciidoc$" . doc-mode))
-                        (add-to-list 'auto-mode-alist '("\\.adoc$" . doc-mode))
-                        (add-to-list 'auto-mode-alist '("\\.asc$" . doc-mode))
-                        (add-hook 'doc-mode-hook '(lambda ()
-                                                    (turn-off-auto-fill)
-                                                    (turn-on-visual-line-mode)
-                                                    (require 'asciidoc)))))
-        (:name markdown-mode
-               :type elpa
-               :load "markdown-mode.el"
-               :after (lambda ()
-                        (add-hook 'markdown-mode-hook '(lambda ()
-                                                         (turn-on-visual-line-mode)
-                                                         ))))
-        (:name textmate
-               :type git
-               :url "git://github.com/defunkt/textmate.el"
-               :load "textmate.el")
-;;        (:name yasnippet
-;;               :type git
-;;               :url "https://github.com/capitaomorte/yasnippet.git"
-;;               :load "yasnippet.el")
-        (:name haml
-               :type git
-               :url "git://github.com/nex3/haml-mode.git"
-               :load "haml-mode.el")
-        (:name sass
-               :type git
-               :url "git://github.com/nex3/sass-mode.git"
-               :load "sass-mode.el")
-        (:name cucumber
-               :type git
-               :url "git://github.com/michaelklishin/cucumber.el"
-               :load "feature-mode.el")
-        (:name rvm
-               :type git
-               :url "http://github.com/djwhitt/rvm.el.git"
-               :load "rvm.el"
-               :compile ("rvm.el")
-               :after (lambda() (rvm-use-default)))
-        (:name rhtml
-               :type git
-               :url "https://github.com/eschulte/rhtml.git"
-               :features rhtml-mode
-               :after (lambda () (rhtml-mode-hook)))
-        (:name yaml-mode
-               :type git
-               :url "http://github.com/yoshiki/yaml-mode.git"
-               :features yaml-mode
-               :after (lambda () (yaml-mode-hook)))
-        (:name multiple-cursors
-               :type elpa
-               :load "multiple-cursors.el")))
-
-(el-get 'sync)
-
-;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
-(set-frame-parameter (selected-frame) 'alpha '(95 60))
-(add-to-list 'default-frame-alist '(alpha 95 60))
-
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq js2-basic-offset 2)
+(setq js2-bounce-indent-p t)
+(setq js2-cleanup-whitespace t)
+(setq js2-cleanup-whitespace t)
+(setq-default js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "Polymer"))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 
 (load "~/.emacs.d/pmade-colors")
 
