@@ -109,6 +109,7 @@
         rhtml-mode
         rvm
         sass-mode
+        web-mode
         yaml-mode
         ))
 
@@ -227,12 +228,13 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(setq js2-basic-offset 2)
-(setq js2-bounce-indent-p t)
-(setq js2-cleanup-whitespace t)
-(setq js2-cleanup-whitespace t)
-(setq-default js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "Polymer"))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq-default js-indent-level 2)
+(setq-default js2-basic-offset 2)
+(setq-default js2-bounce-indent-p t)
+(setq-default js2-cleanup-whitespace t)
+(setq-default js2-cleanup-whitespace t)
+(setq-default js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "Polymer"))
 
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 (setq dart-enable-analysis-server t)
