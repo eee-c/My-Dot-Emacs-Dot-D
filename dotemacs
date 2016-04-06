@@ -198,8 +198,11 @@
                       :foreground "#cccaee")
 
   (setq web-mode-extra-snippets
-      '((nil . (("polymer" . "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <title></title>\n\n    <!-- 1. Load the polymer platform. -->\n    <script\n       src=\"bower_components/webcomponentsjs/webcomponents.js\"></script>\n    <!-- 2. Load component(s) -->\n    <link rel=\"import\" href=\"elements/|\">\n  </head>\n  <body>\n    <div class=\"container\">\n      <h1></h1>\n    </div>\n  </body>\n</html>")))
-        ))
+        '((nil . (("polymer-smoke" . "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <title></title>\n\n    <!-- 1. Load the polymer platform. -->\n    <script\n       src=\"bower_components/webcomponentsjs/webcomponents.js\"></script>\n    <!-- 2. Load component(s) -->\n    <link rel=\"import\" href=\"elements/|\">\n  </head>\n  <body>\n    <div class=\"container\">\n      <h1></h1>\n    </div>\n  </body>\n</html>")
+                  ("polymer-el" . "<link rel=\"import\" href=\"../bower_components/polymer/polymer.html\">\n<dom-module name=\"|\">\n  <template>\n  </template>\n  <script>\n    Polymer({is: ''})\n  </script>\n</dom-module>"))
+               )
+          )
+        )
 )
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
