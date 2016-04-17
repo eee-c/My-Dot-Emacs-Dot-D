@@ -214,7 +214,7 @@
 (setq-default js2-bounce-indent-p t)
 (setq-default js2-cleanup-whitespace t)
 (setq-default js2-cleanup-whitespace t)
-(setq-default js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "Polymer"))
+(setq-default js2-global-externs '("module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "Polymer" "describe" "beforeEach" "afterEach" "it" "context"))
 
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 (setq dart-enable-analysis-server t)
