@@ -246,6 +246,8 @@
   (setenv "PS1" "$ ")
   (cd
    (replace-regexp-in-string "/\\(bin\\|lib\\|test\\)/.+" "/" buffer-file-name))
+  (split-window-right)
+  (other-window -1)
   (term "/bin/bash"))
 (global-set-key (kbd "C-s-p") 'bash-in-project-dir)
 
