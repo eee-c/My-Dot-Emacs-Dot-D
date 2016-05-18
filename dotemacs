@@ -4,8 +4,9 @@
 ;;; This is loaded from the real .emacs file
 
 ;;; Code:
-(setenv "PATH" (concat (getenv "PATH") ":/home/chris/local/dart/dart-sdk/bin"))
+(setenv "PATH" (concat (getenv "PATH") ":/home/chris/local/bin:/home/chris/local/dart/dart-sdk/bin"))
 (setq exec-path (append exec-path '("/home/chris/local/dart/dart-sdk/bin")))
+(setq exec-path (append exec-path '("/home/chris/local/bin")))
 
 (add-to-list 'load-path "~/.emacs.d/elisp")
 
@@ -238,6 +239,16 @@
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 (setq dart-enable-analysis-server t)
 (add-hook 'dart-mode-hook 'flycheck-mode)
+
+(defun bash-in-project-dir ()
+  "Run bash in the project directory."
+  (interactive)
+  (setenv "PS1" "$ ")
+  (cd
+   (replace-regexp-in-string "/\\(bin\\|lib\\|test\\)/.+" "/" buffer-file-name))
+  (term "/bin/bash"))
+(global-set-key (kbd "C-s-p") 'bash-in-project-dir)
+
 
 ;; Ugh. No erlang-mode in elpa?
 ;; (setq load-path (cons (concat "/usr/share/"
