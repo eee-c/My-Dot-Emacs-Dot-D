@@ -241,6 +241,15 @@
 (setq dart-enable-analysis-server t)
 (add-hook 'dart-mode-hook 'flycheck-mode)
 
+(defun dart-extract-region(start end filename)
+  "function takes current region, and writes it to specified file"
+  (interactive "r\nsFilename: ")
+  (write-region start end (format "../lib/%s.dart" filename) t)
+  (find-file-noselect (format "../lib/%s.dart" filename))
+  (kill-region start end)
+  (insert (format "import '../lib/%s.dart';\n" filename)))
+(global-set-key [f8] 'dart-extract-region)
+
 (defun bash-in-project-dir ()
   "Run bash in the project directory."
   (interactive)
@@ -274,6 +283,10 @@
 (global-set-key "\C-c\C-d" 'duplicate-line)
 
 ;; my macros
+(fset 'star-comment-above
+   [?\C-a ?\C-o ?/ ?* ?  ?  ?  ?  ?* ?/ left left left left left ?\C-d])
+(global-set-key "\M-8" 'star-comment-above)
+
 (fset 'wrap-p
    [?  ?  ?< ?p ?> ?\C-e ?< ?/ ?p ?> down down ?\C-a])
 (global-set-key "\M-p" 'wrap-p)
