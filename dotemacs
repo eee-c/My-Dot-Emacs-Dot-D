@@ -243,11 +243,11 @@
 
 (defun dart-extract-region(start end filename)
   "function takes current region, and writes it to specified file"
-  (interactive "r\nsFilename: ")
+  (interactive "r\nsLibrary: ")
   (write-region start end (format "../lib/%s.dart" filename) t)
-  (find-file-noselect (format "../lib/%s.dart" filename))
   (kill-region start end)
-  (insert (format "import '../lib/%s.dart';\n" filename)))
+  (insert (format "import '../lib/%s.dart';\n" filename))
+  (find-file-noselect (format "../lib/%s.dart" filename)))
 (global-set-key [f8] 'dart-extract-region)
 
 (defun bash-in-project-dir ()
@@ -258,7 +258,9 @@
    (replace-regexp-in-string "/\\(bin\\|lib\\|test\\)/.+" "/" buffer-file-name))
   (split-window-right)
   (other-window -1)
-  (term "/bin/bash"))
+  (term "/bin/bash")
+  (other-window -1)
+  (cd (replace-regexp-in-string "[^/]+$" "" buffer-file-name)))
 (global-set-key (kbd "C-s-p") 'bash-in-project-dir)
 
 
