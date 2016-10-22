@@ -282,7 +282,7 @@
   (next-line 1)
   (yank)
 )
-(global-set-key "\C-c\C-d" 'duplicate-line)
+(global-set-key "\C-c2" 'duplicate-line)
 
 ;; my macros
 (fset 'star-comment-above
