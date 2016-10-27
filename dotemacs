@@ -63,6 +63,7 @@
 (setq auto-save-mode nil)
 
 (global-auto-revert-mode t)
+(electric-pair-mode 1)
 
 (setq make-backup-files nil)
 (setq auto-save-default nil)
